@@ -11,7 +11,7 @@
     using System.Reflection;
     using System.Threading.Tasks;
 
-    public class LaunchCleaner
+    public class LaunchCleaner : ILaunchCleaner
     {
         private readonly CleanOptions _options;
 

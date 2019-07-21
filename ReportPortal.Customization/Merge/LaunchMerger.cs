@@ -8,7 +8,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class LaunchMerger
+    public class LaunchMerger : ILaunchMerger
     {
         private readonly MergeOptions _options;
 
@@ -56,7 +56,7 @@
             };
         }
 
-        public async Task<Launch> Merge(Launch first, Launch second)
+        public async Task<Launch> MergeAsync(Launch first, Launch second)
         {
             return await _service
                 .MergeLaunchesAsync(ConfigureMergeRequest(first, second))
