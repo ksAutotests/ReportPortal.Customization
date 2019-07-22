@@ -30,11 +30,8 @@
                 throw new ArgumentNullException(nameof(launch));
             }
 
-            var container = await _service
-                .GetTestItemsAsync(GetFilter(launch.Id))
-                .ConfigureAwait(false);
-
-            var toDelete = GetTestsMarkedForDeletion(container.TestItems);
+            var testItems = await GetTestItems(launch.Id);
+            var toDelete = GetTestsMarkedForDeletion(testItems);
 
             toDelete
                 .ForEach(async id => await _service.DeleteTestItemAsync(id)
@@ -43,9 +40,30 @@
             return launch;
         }
 
+        private async Task<List<TestItem>> GetTestItems(string launchId)
+        {
+            var items = new List<TestItem>();
+            var current = new List<TestItem>();
+
+            int page = 1;
+
+            do
+            {
+                var container = await _service
+                    .GetTestItemsAsync(GetFilter(page++, launchId))
+                    .ConfigureAwait(false);
+
+                current = container.TestItems;
+                items.AddRange(current);
+            }
+            while (current.Count > 0);
+
+            return items;
+        }
+
         private List<string> GetTestsMarkedForDeletion(List<TestItem> items)
         {
-            var marked = new Dictionary<string, bool>();
+            var marked = new Dictionary<string, TestItemType>();
             var predicate = CompilePredicate();
 
             foreach (var item in items.OrderBy(t => t.Type))
@@ -60,24 +78,24 @@
                 {
                     if (item.IsSuite() && !marked.ContainsKey(item.Id))
                     {
-                        marked[item.Id] = true;
+                        marked[item.Id] = item.Type;
 
                         foreach (var descendant in descendants)
                         {
-                            marked[descendant.Id] = false;
+                            marked[descendant.Id] = item.Type;
                         }
                     }
                     else
                     {
                         if (!marked.ContainsKey(item.Id))
                         {
-                            marked[item.Id] = true;
+                            marked[item.Id] = item.Type;
                         }
                     }
                 }
             }
 
-            return marked.Where(kvp => kvp.Value)
+            return marked.OrderByDescending(kvp => kvp.Value)
                 .Select(kvp => kvp.Key)
                 .ToList();
         }
@@ -85,25 +103,24 @@
         private Func<TestItem, bool> CompilePredicate()
         {
             var parameter = Expression.Parameter(typeof(TestItem), "item");
-            Expression final = default(Expression);
 
-            var initial = Call(nameof(ReportPortalExtension.IsFailed), parameter);
+            Expression initial = Call(nameof(ReportPortalExtension.IsFailed), parameter);
 
             if (_options.RemoveSkipped)
             {
-                final = Expression.Or(left: initial,
+                initial = Expression.Or(left: initial,
                    right: Call(nameof(ReportPortalExtension.IsSkipped), parameter));
             }
             if (_options.RemoveInterrupted)
             {
-                final = Expression.Or(left: final,
+                initial = Expression.Or(left: initial,
                    right: Call(nameof(ReportPortalExtension.IsInterrupted), parameter));
             }
 
-            final = Expression.Or(left: final,
+            initial = Expression.Or(left: initial,
                 right: Call(nameof(ReportPortalExtension.IsNotTest), parameter));
 
-            return Expression.Lambda<Func<TestItem, bool>>(final, parameter).Compile();
+            return Expression.Lambda<Func<TestItem, bool>>(initial, parameter).Compile();
         }
 
         private MethodCallExpression Call(string name, ParameterExpression parameter)
@@ -114,7 +131,7 @@
             return Expression.Call(null, methodInfo, parameter);
         }
 
-        private static FilterOption GetFilter(string launchId)
+        private static FilterOption GetFilter(int page, string launchId)
         {
             return new FilterOption
             {
@@ -122,7 +139,7 @@
                 {
                     new Filter(FilterOperation.Equals, "launch", launchId)
                 },
-                Paging = new Paging(1, int.MaxValue),
+                Paging = new Paging(page, int.MaxValue),
             };
         }
     }
