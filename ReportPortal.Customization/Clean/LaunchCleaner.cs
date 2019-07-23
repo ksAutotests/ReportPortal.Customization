@@ -33,9 +33,18 @@
             var testItems = await GetTestItems(launch.Id);
             var toDelete = GetTestsMarkedForDeletion(testItems);
 
-            toDelete
-                .ForEach(async id => await _service.DeleteTestItemAsync(id)
-                .ConfigureAwait(false));
+            foreach (var testItem in toDelete)
+            {
+                try
+                {
+                    var message = await _service.DeleteTestItemAsync(testItem);
+                    Console.WriteLine(message.Info);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
 
             return launch;
         }
@@ -43,31 +52,34 @@
         private async Task<List<TestItem>> GetTestItems(string launchId)
         {
             var items = new List<TestItem>();
-            var current = new List<TestItem>();
-
             int page = 1;
 
+            TestItemsContainer container;
             do
             {
-                var container = await _service
-                    .GetTestItemsAsync(GetFilter(page++, launchId))
-                    .ConfigureAwait(false);
+                container = await _service
+                   .GetTestItemsAsync(GetFilter(page++, launchId))
+                   .ConfigureAwait(false);
 
-                current = container.TestItems;
-                items.AddRange(current);
+                items.AddRange(container.TestItems);
             }
-            while (current.Count > 0);
+            while (container.TestItems.Count > 0);
 
             return items;
         }
 
         private List<string> GetTestsMarkedForDeletion(List<TestItem> items)
         {
-            var marked = new Dictionary<string, TestItemType>();
+            var marked = new Dictionary<string, (TestItemType Type, bool Delete)>();
             var predicate = CompilePredicate();
 
             foreach (var item in items.OrderBy(t => t.Type))
             {
+                if (marked.ContainsKey(item.Id))
+                {
+                    continue;
+                }
+
                 var descendants = items.Where(d => d.PathNames.ContainsKey(item.Id));
 
                 bool toDelete = item.IsSuite()
@@ -76,26 +88,50 @@
 
                 if (toDelete)
                 {
-                    if (item.IsSuite() && !marked.ContainsKey(item.Id))
+                    if (item.IsSuite())
                     {
-                        marked[item.Id] = item.Type;
+                        marked[item.Id] = (item.Type, true);
 
                         foreach (var descendant in descendants)
                         {
-                            marked[descendant.Id] = item.Type;
+                            marked[descendant.Id] = (item.Type, false);
                         }
                     }
                     else
                     {
-                        if (!marked.ContainsKey(item.Id))
-                        {
-                            marked[item.Id] = item.Type;
-                        }
+                        marked[item.Id] = (item.Type, true);
                     }
                 }
+
+                //var descendants = items.Where(d => d.PathNames.ContainsKey(item.Id));
+
+                //bool toDelete = item.IsSuite()
+                //        ? descendants.All(predicate)
+                //        : predicate(item);
+
+                //if (toDelete)
+                //{
+                //    if (item.IsSuite() && !marked.ContainsKey(item.Id))
+                //    {
+                //        marked[item.Id] = (item.Type, true);
+
+                //        foreach (var descendant in descendants)
+                //        {
+                //            marked[descendant.Id] = (item.Type, false);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if (!marked.ContainsKey(item.Id))
+                //        {
+                //            marked[item.Id] = (item.Type, true);
+                //        }
+                //    }
+                //}
             }
 
             return marked.OrderByDescending(kvp => kvp.Value)
+                .Where(kvp => kvp.Value.Delete)
                 .Select(kvp => kvp.Key)
                 .ToList();
         }
