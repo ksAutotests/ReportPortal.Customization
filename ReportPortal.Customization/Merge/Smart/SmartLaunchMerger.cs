@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
     using ReportPortal.Client;
     using ReportPortal.Client.Filtering;
     using ReportPortal.Client.Models;
@@ -10,15 +11,18 @@
 
     public class SmartLaunchMerger : ISmartLaunchMerger
     {
+        private readonly ILogger _logger;
+
         private readonly ILaunchMerger _merger;
 
         private readonly Service _service;
 
         private readonly bool _debug;
 
-        public SmartLaunchMerger(ILaunchMerger merger, Service service, bool debug)
+        public SmartLaunchMerger(ILaunchMerger merger, Service service, bool debug, ILogger logger = null)
         {
             _debug = debug;
+            _logger = logger;
 
             _merger = merger ?? throw new ArgumentNullException(nameof(merger));
             _service = service ?? throw new ArgumentNullException(nameof(merger));
@@ -29,6 +33,7 @@
             filter.Sorting = new Sorting(new List<string> { "start_time" }, SortDirection.Descending);
 
             var container = await _service.GetLaunchesAsync(filter, _debug).ConfigureAwait(false);
+            _logger?.LogDebug($"Successfully found ${container.Launches.Count} launch(es)");
 
             switch (container.Launches.Count)
             {

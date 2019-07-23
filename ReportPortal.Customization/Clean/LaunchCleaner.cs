@@ -1,5 +1,6 @@
 ﻿namespace ReportPortal.Customization.Clean
 {
+    using Microsoft.Extensions.Logging;
     using ReportPortal.Client;
     using ReportPortal.Client.Filtering;
     using ReportPortal.Client.Models;
@@ -13,14 +14,18 @@
 
     public class LaunchCleaner : ILaunchCleaner
     {
+        private readonly ILogger _logger;
+
         private readonly CleanOptions _options;
 
         private readonly Service _service;
 
-        public LaunchCleaner(Service service, CleanOptions options)
+        public LaunchCleaner(Service service, CleanOptions options, ILogger logger = null)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
             _options = options ?? throw new ArgumentNullException(nameof(options));
+
+            _logger = logger;
         }
 
         public async Task<Launch> CleanAsync(Launch launch)
@@ -38,11 +43,11 @@
                 try
                 {
                     var message = await _service.DeleteTestItemAsync(testItem);
-                    Console.WriteLine(message.Info);
+                    _logger?.LogDebug(message.Info);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    _logger?.LogError(ex.Message);
                 }
             }
 
@@ -102,38 +107,13 @@
                         marked[item.Id] = (item.Type, true);
                     }
                 }
-
-                //var descendants = items.Where(d => d.PathNames.ContainsKey(item.Id));
-
-                //bool toDelete = item.IsSuite()
-                //        ? descendants.All(predicate)
-                //        : predicate(item);
-
-                //if (toDelete)
-                //{
-                //    if (item.IsSuite() && !marked.ContainsKey(item.Id))
-                //    {
-                //        marked[item.Id] = (item.Type, true);
-
-                //        foreach (var descendant in descendants)
-                //        {
-                //            marked[descendant.Id] = (item.Type, false);
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (!marked.ContainsKey(item.Id))
-                //        {
-                //            marked[item.Id] = (item.Type, true);
-                //        }
-                //    }
-                //}
             }
 
-            return marked.OrderByDescending(kvp => kvp.Value)
-                .Where(kvp => kvp.Value.Delete)
-                .Select(kvp => kvp.Key)
-                .ToList();
+            var returned = marked.OrderByDescending(kvp => kvp.Value)
+                .Where(kvp => kvp.Value.Delete);
+
+            _logger?.LogDebug($"Marked to deletion next items :\n{string.Join("\n", returned)}");
+            return returned.Select(kvp => kvp.Key).ToList();
         }
 
         private Func<TestItem, bool> CompilePredicate()
