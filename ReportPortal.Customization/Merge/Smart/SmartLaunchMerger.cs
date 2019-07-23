@@ -40,17 +40,13 @@
                 case 0:
                     throw new LaunchNotFoundException("Launches for merging not found.");
                 case 1:
-                    return await Task
-                        .FromResult(container.Launches[0])
-                        .ConfigureAwait(false);
+                    return await Task.FromResult(container.Launches[0]).ConfigureAwait(false);
                 default:
                     {
                         var current = container.Launches[0];
                         var previous = container.Launches[1];
 
-                        return await _merger
-                            .MergeAsync(previous, current)
-                            .ConfigureAwait(false);
+                        return await _merger.MergeAsync(previous, current).ConfigureAwait(false);
                     }
             }
         }

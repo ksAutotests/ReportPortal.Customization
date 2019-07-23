@@ -35,14 +35,14 @@
                 throw new ArgumentNullException(nameof(launch));
             }
 
-            var testItems = await GetTestItems(launch.Id);
+            var testItems = await GetTestItems(launch.Id).ConfigureAwait(false);
             var toDelete = GetTestsMarkedForDeletion(testItems);
 
             foreach (var testItem in toDelete)
             {
                 try
                 {
-                    var message = await _service.DeleteTestItemAsync(testItem);
+                    var message = await _service.DeleteTestItemAsync(testItem).ConfigureAwait(false);
                     _logger?.LogDebug(message.Info);
                 }
                 catch (Exception ex)
@@ -62,10 +62,7 @@
             TestItemsContainer container;
             do
             {
-                container = await _service
-                   .GetTestItemsAsync(GetFilter(page++, launchId))
-                   .ConfigureAwait(false);
-
+                container = await _service.GetTestItemsAsync(GetFilter(page++, launchId)).ConfigureAwait(false);
                 items.AddRange(container.TestItems);
             }
             while (container.TestItems.Count > 0);

@@ -58,9 +58,7 @@
 
         public async Task<Launch> MergeAsync(Launch first, Launch second)
         {
-            return await _service
-                .MergeLaunchesAsync(ConfigureMergeRequest(first, second))
-                .ConfigureAwait(false);
+            return await _service.MergeLaunchesAsync(ConfigureMergeRequest(first, second)).ConfigureAwait(false);
         }
     }
 }
