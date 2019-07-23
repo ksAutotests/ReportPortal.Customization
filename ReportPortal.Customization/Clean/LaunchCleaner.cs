@@ -78,6 +78,7 @@
             var marked = new Dictionary<string, (TestItemType Type, bool Delete)>();
             var predicate = CompilePredicate();
 
+            //ordering for the passage of first complex tests like test and suites, and then steps.
             foreach (var item in items.OrderBy(t => t.Type))
             {
                 if (marked.ContainsKey(item.Id))
@@ -93,6 +94,7 @@
 
                 if (toDelete)
                 {
+                    // if suite, mark for deleting only suite(children removed automatically)
                     if (item.IsSuite())
                     {
                         marked[item.Id] = (item.Type, true);
