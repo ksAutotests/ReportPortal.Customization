@@ -52,7 +52,7 @@
                 MergeType = _options.Type,
 
                 StartTime = startTime,
-                EndTime = endTime ?? DateTime.Now
+                EndTime = endTime ?? DateTime.UtcNow
             };
         }
 
