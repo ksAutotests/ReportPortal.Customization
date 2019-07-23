@@ -19,7 +19,7 @@
 
         public async Task<Launch> MergeAsync(Launch cleanable, Launch nonCleanable)
         {
-            var launchAfterClean = await _cleaner.CleanAsync(cleanable) .ConfigureAwait(false);
+            var launchAfterClean = await _cleaner.CleanAsync(cleanable).ConfigureAwait(false);
 
             return await _decorated.MergeAsync(launchAfterClean, nonCleanable).ConfigureAwait(false);
         }
