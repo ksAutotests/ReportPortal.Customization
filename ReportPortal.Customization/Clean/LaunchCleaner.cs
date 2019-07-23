@@ -108,11 +108,11 @@
                 }
             }
 
-            var returned = marked.OrderByDescending(kvp => kvp.Value)
+            var forDelete = marked.OrderByDescending(kvp => kvp.Value)
                 .Where(kvp => kvp.Value.Delete);
 
-            _logger?.LogDebug($"Marked to deletion next items :\n{string.Join("\n", returned)}");
-            return returned.Select(kvp => kvp.Key).ToList();
+            _logger?.LogDebug("Marked to deletion {forDelete}", forDelete);
+            return forDelete.Select(kvp => kvp.Key).ToList();
         }
 
         private Func<TestItem, bool> CompilePredicate()
