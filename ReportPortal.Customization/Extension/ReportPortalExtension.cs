@@ -27,5 +27,9 @@
         {
             return test.Type == TestItemType.Suite || test.Type == TestItemType.Test;
         }
+
+        public static bool IsFinished(this Launch launch) => launch.EndTime.HasValue;
+
+        public static bool IsNotFinished(this Launch launch) => !IsFinished(launch);
     }
 }
