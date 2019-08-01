@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Clean
+﻿namespace ReportPortal.Buns.Clean
 {
     using System;
     using System.Threading.Tasks;
@@ -6,7 +6,7 @@
     using ReportPortal.Client;
     using ReportPortal.Client.Models;
     using ReportPortal.Client.Requests;
-    using ReportPortal.Customization.Extension;
+    using ReportPortal.Buns.Extension;
 
     public class ForciblyTerminatingLaunchCleaner : ILaunchCleaner
     {

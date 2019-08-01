@@ -1,10 +1,10 @@
-﻿namespace ReportPortal.Customization.Clean
+﻿namespace ReportPortal.Buns.Clean
 {
     using Microsoft.Extensions.Logging;
     using ReportPortal.Client;
     using ReportPortal.Client.Filtering;
     using ReportPortal.Client.Models;
-    using ReportPortal.Customization.Extension;
+    using ReportPortal.Buns.Extension;
     using System;
     using System.Collections.Generic;
     using System.Linq;

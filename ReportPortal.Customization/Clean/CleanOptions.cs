@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Clean
+﻿namespace ReportPortal.Buns.Clean
 {
     public class CleanOptions
     {

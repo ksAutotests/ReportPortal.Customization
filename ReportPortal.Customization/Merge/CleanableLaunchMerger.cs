@@ -1,7 +1,7 @@
-﻿namespace ReportPortal.Customization.Merge
+﻿namespace ReportPortal.Buns.Merge
 {
     using ReportPortal.Client.Models;
-    using ReportPortal.Customization.Clean;
+    using ReportPortal.Buns.Clean;
     using System;
     using System.Threading.Tasks;
 

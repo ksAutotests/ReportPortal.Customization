@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Extension
+﻿namespace ReportPortal.Buns.Extension
 {
     using ReportPortal.Client.Models;
     using System.Linq;

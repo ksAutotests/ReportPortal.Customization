@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Clean
+﻿namespace ReportPortal.Buns.Clean
 {
     using ReportPortal.Client.Models;
     using System.Threading.Tasks;

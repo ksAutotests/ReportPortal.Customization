@@ -1,7 +1,7 @@
-﻿namespace ReportPortal.Customization.Merge
+﻿namespace ReportPortal.Buns.Merge
 {
     using ReportPortal.Client.Models;
-    using ReportPortal.Customization.Merge.Strategies;
+    using ReportPortal.Buns.Merge.Strategies;
     using System.Collections.Generic;
 
     public class MergeOptions

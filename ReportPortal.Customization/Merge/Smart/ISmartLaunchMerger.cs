@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Merge.Smart
+﻿namespace ReportPortal.Buns.Merge.Smart
 {
     using ReportPortal.Client.Filtering;
     using ReportPortal.Client.Models;

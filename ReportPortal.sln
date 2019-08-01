@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportPortal.Customization", "ReportPortal.Customization\ReportPortal.Customization.csproj", "{5505AA77-4612-47B4-8932-079E5C703520}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportPortal.Buns", "ReportPortal.Customization\ReportPortal.Buns.csproj", "{5505AA77-4612-47B4-8932-079E5C703520}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportPortal.Customization.Test", "ReportPortal.Customization.Test\ReportPortal.Customization.Test.csproj", "{63417A6E-50DE-4D4A-825E-282ED411B465}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportPortal.Buns.Test", "ReportPortal.Customization.Test\ReportPortal.Buns.Test.csproj", "{63417A6E-50DE-4D4A-825E-282ED411B465}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

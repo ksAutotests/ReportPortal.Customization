@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Merge
+﻿namespace ReportPortal.Buns.Merge
 {
     public static class MergeTypes
     {
