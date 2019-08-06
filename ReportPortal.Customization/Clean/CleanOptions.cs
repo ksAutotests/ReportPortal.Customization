@@ -10,6 +10,6 @@
 
         public bool RemoveSkipped { get; set; }
 
-        public bool RemoveInterrupted { get; }
+        public bool RemoveInterrupted { get; set; }
     }
 }
