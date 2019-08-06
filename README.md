@@ -49,7 +49,7 @@ namespace ReportPortal.Buns.Test
             var merger = new LaunchMerger(service, MergeOptions.Default);
             var mergedLaunch = await merger.MergeAsync(container.Launches[0], container.Launches[1]);
 
-            //merging with cleaning launch passed to mathod as first parameter
+            //merging with cleaning launch passed to method as first parameter
             var cleanableLaunchMerger = new CleanableLaunchMerger(merger, cleaner);
             mergedLaunch = await cleanableLaunchMerger.MergeAsync(container.Launches[1], container.Launches[0]);
 
