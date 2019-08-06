@@ -36,9 +36,8 @@
             }
 
             var testItems = await GetTestItems(launch.Id).ConfigureAwait(false);
-            var toDelete = GetTestsMarkedForDeletion(testItems);
 
-            foreach (var testItem in toDelete)
+            foreach (var testItem in GetTestsMarkedForDeletion(testItems))
             {
                 try
                 {
