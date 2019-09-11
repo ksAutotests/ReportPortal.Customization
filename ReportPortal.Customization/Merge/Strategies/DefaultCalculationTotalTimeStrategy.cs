@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Merge.Strategies
+﻿namespace ReportPortal.Buns.Merge.Strategies
 {
     using ReportPortal.Client.Models;
     using System;

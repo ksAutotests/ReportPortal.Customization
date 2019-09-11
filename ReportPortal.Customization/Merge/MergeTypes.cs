@@ -1,9 +1,9 @@
-﻿namespace ReportPortal.Customization.Merge
+﻿namespace ReportPortal.Buns.Merge
 {
     public static class MergeTypes
     {
         public const string Deep = "DEEP";
 
-        public const string Linear = "LINEAR";
+        public const string Default = "DEFAULT";
     }
 }

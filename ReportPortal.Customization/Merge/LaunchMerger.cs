@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Merge
+﻿namespace ReportPortal.Buns.Merge
 {
     using ReportPortal.Client;
     using ReportPortal.Client.Models;

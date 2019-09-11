@@ -1,8 +1,6 @@
-﻿namespace ReportPortal.Customization.Exceptions
+﻿namespace ReportPortal.Buns.Exceptions
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     public class LaunchNotFoundException : Exception
     {

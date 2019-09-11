@@ -1,10 +1,10 @@
-﻿namespace ReportPortal.Customization.Clean
+﻿namespace ReportPortal.Buns.Clean
 {
     using Microsoft.Extensions.Logging;
     using ReportPortal.Client;
     using ReportPortal.Client.Filtering;
     using ReportPortal.Client.Models;
-    using ReportPortal.Customization.Extension;
+    using ReportPortal.Buns.Extension;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -36,9 +36,8 @@
             }
 
             var testItems = await GetTestItems(launch.Id).ConfigureAwait(false);
-            var toDelete = GetTestsMarkedForDeletion(testItems);
 
-            foreach (var testItem in toDelete)
+            foreach (var testItem in GetTestsMarkedForDeletion(testItems))
             {
                 try
                 {

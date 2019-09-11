@@ -1,4 +1,4 @@
-﻿namespace ReportPortal.Customization.Clean
+﻿namespace ReportPortal.Buns.Clean
 {
     public class CleanOptions
     {
@@ -10,6 +10,6 @@
 
         public bool RemoveSkipped { get; set; }
 
-        public bool RemoveInterrupted { get; }
+        public bool RemoveInterrupted { get; set; }
     }
 }

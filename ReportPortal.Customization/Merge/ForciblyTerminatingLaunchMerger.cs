@@ -3,10 +3,11 @@
     using System;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using ReportPortal.Buns.Extension;
+    using ReportPortal.Buns.Merge;
     using ReportPortal.Client;
     using ReportPortal.Client.Models;
     using ReportPortal.Client.Requests;
-    using ReportPortal.Customization.Extension;
 
     public class ForciblyTerminatingLaunchMerger : ILaunchMerger
     {
