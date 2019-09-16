@@ -1,10 +1,9 @@
-﻿namespace ReportPortal.Customization.Merge
+﻿namespace ReportPortal.Buns.Merge
 {
     using System;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using ReportPortal.Buns.Extension;
-    using ReportPortal.Buns.Merge;
     using ReportPortal.Client;
     using ReportPortal.Client.Models;
     using ReportPortal.Client.Requests;
@@ -30,7 +29,10 @@
             await FinishLaunch(first);
             await FinishLaunch(second);
 
-            return await _decorated.MergeAsync(first, second);
+            var launch = await _decorated.MergeAsync(first, second);
+            _logger?.LogDebug($"Merging launches with id {first.Id} and {second.Id} successfully completed.");
+
+            return launch;
         }
 
         private async Task FinishLaunch(Launch launch)
@@ -40,7 +42,7 @@
                 var finishRequest = new FinishLaunchRequest { EndTime = DateTime.UtcNow };
                 var message = await _service.FinishLaunchAsync(launch.Id, finishRequest, true).ConfigureAwait(false);
 
-                _logger.LogDebug(message.Info);
+                _logger?.LogDebug(message.Info);
             }
         }
     }
